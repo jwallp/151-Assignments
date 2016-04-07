@@ -1,5 +1,4 @@
 import random as rand
-import csv
 
 
 def read_user_input(threshold, datalist, counts, N):
@@ -15,18 +14,8 @@ def read_user_input(threshold, datalist, counts, N):
 def threshold_test(datalist, counts, N, Nn, Nr):
     while Nn > 0:
         draw = rand.random()
-        if draw < Nn/Nr:
-            counts[N-Nr] += 1
+        if draw < Nn / Nr:
+            counts[N - Nr] += 1
             Nn -= 1
         Nr -= 1
-
     return counts
-
-        #return counts
-
-"""
-        for row in reader:
-            draw = rng.random()
-            if draw < Nn/Nr:
-                counts[]
-                """
