@@ -2,22 +2,17 @@ import random as rand
 import csv
 
 
-def read_user_input(threshold, counts):
-    with open('abalone.csv') as csvfile:
-        reader = csv.reader(csvfile)
+def read_user_input(threshold, datalist, counts, N):
+    Nr = N
+    Nn = round(threshold * N)
 
-        datalist = list(reader)
-        N = len(datalist)
-        Nr = N
-        Nn = round(threshold * N)
+    if counts is None:
+        counts = [0] * N
 
-        if counts is None:
-            counts = [0] * N
-
-        return threshold_test(counts, N, Nn, Nr)
+    return threshold_test(datalist, counts, N, Nn, Nr)
 
 
-def threshold_test(counts, N, Nn, Nr):
+def threshold_test(datalist, counts, N, Nn, Nr):
     while Nn > 0:
         draw = rand.random()
         if draw < Nn/Nr:
