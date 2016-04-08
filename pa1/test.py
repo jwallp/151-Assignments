@@ -22,12 +22,13 @@ rand.seed(777)
 counts = None
 means = list()
 sd = list()
-num_runs = [10,100,1000,10000]
+num_runs = [10]
 
 '''Run through algorithm num_runs[i]'''
 for run in num_runs:
     for i in range(run):
         counts = pa1.read_user_input(threshold, datalist, counts, N)
+        print (counts)
     np_counts = np.asarray(counts)
     means.append(np.mean(np_counts)/float(run))
     sd.append(np.std(np_counts)/float(run))
