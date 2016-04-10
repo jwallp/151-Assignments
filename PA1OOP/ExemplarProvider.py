@@ -2,6 +2,7 @@ import csv
 
 
 class ExemplarProvider:
+
     def __init__(self, filename):
         self.file = open(filename)
         self.reader = csv.reader(self.file)
