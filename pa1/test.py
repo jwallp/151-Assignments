@@ -22,7 +22,7 @@ rand.seed(777)
 counts = None
 means = list()
 sd = list()
-num_runs = [10]
+num_runs = [10,100,1000,10000,100000]
 
 '''Run through algorithm num_runs[i]'''
 for run in num_runs:
@@ -38,8 +38,10 @@ for run in num_runs:
 print (means)
 print (sd)
 
-plt.plot(num_runs, means)
+plt.plot(num_runs, means, 'ro')
 plt.xlabel("# of Runs")
+plt.xticks(num_runs, num_runs, rotation='vertical')
+plt.margins(0.2)
 plt.ylabel("Mean")
 plt.show()
 

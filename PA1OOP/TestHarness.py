@@ -10,7 +10,7 @@ TEST = 1
 rand.seed(777)
 means = list()
 sd = list()
-num_runs = [10,100,1000,10000]
+num_runs = [10,100,1000,10000,100000]
 
 '''Prompt user to enter percent of data set to use for test set'''
 threshold = int(input("Enter a threshold percentage: "))/100.0
@@ -31,7 +31,10 @@ for run in num_runs:
 '''Show results'''
 print ("Mean: ",means)
 print ("Standard Deviation: ",sd)
-plt.plot(num_runs, means)
+
+plt.plot(num_runs, means, 'ro')
 plt.xlabel("# of Runs")
+plt.xticks(num_runs, num_runs, rotation='vertical')
+plt.margins(0.2)
 plt.ylabel("Mean")
 plt.show()
