@@ -17,23 +17,19 @@ def mode( data):
     return mode[0]
 
 
-def max_of_lists(list1, list2):
+def max_of_lists(list_of_sets):
     max_val = 0
-    for row in list1:
-        if row[len(list1[0]) - 1] > max_val:
-            max_val = row[len(list1[0]) - 1]
-    for row in list2:
-        if row[len(list2[0]) - 1] > max_val:
-            max_val = row[len(list2[0]) - 1]
+    for subset in list_of_sets:
+        for row in subset:
+            if row[len(subset[0]) - 1] > max_val:
+                max_val = row[len(subset[0]) - 1]
     return int(max_val)
 
 
-def min_of_lists(list1, list2):
+def min_of_lists(list_of_sets):
     min_val = sys.maxsize
-    for row in list1:
-        if row[len(list1[0]) - 1] < min_val:
-            min_val = row[len(list1[0]) - 1]
-    for row in list2:
-        if row[len(list2[0]) - 1] < min_val:
-            min_val = row[len(list2[0]) - 1]
+    for subset in list_of_sets:
+        for row in subset:
+            if row[len(subset[0]) - 1] < min_val:
+                min_val = row[len(subset[0]) - 1]
     return int(min_val)

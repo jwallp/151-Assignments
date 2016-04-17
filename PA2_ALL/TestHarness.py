@@ -71,8 +71,8 @@ for data_file in data_files:
         write_file = open(name, 'w', newline='')
         csv_writer = csv.writer(write_file, delimiter=',')
 
-        max_val = Math.max_of_lists(test_set, training_set)
-        min_val = Math.min_of_lists(test_set, training_set)
+        max_val = Math.max_of_lists([test_set, training_set])
+        min_val = Math.min_of_lists([test_set, training_set])
         matrix = [[0 for i in range(min_val, max_val+1)] for j in range(min_val, max_val+1)]
 
         for i in range(total):

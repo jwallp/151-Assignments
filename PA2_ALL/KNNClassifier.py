@@ -1,7 +1,5 @@
 import sys
-import math
 import Math
-from collections import Counter
 
 class KNNClassifier:
     """
