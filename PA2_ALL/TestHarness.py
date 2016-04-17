@@ -56,19 +56,10 @@ for data_file in data_files:
     classifier = knn.KNNClassifier(test_set, training_set)
 
     k_arr = [1,3,5,7,9]
+    classified = classifier.run(k_arr)
+    total = len(classified)
+
     for k in k_arr:
-        print("   ->Running KNN for", data_file, "on K =", k,":")
-        classified = classifier.run(k)
-        total = len(classified)
-
-        miss = 0
-        """
-        true_positive = 0
-        false_positive = 0
-        true_negative = 0
-        false_negative = 0
-        """
-
         name = 'confusion_matrices/K%d/%s-K%d-matrix.csv'%(k, data_file, k)
         write_file = open(name, 'w', newline='')
         csv_writer = csv.writer(write_file, delimiter=',')
@@ -77,9 +68,11 @@ for data_file in data_files:
         min_val = KNNMath.min_of_lists([test_set, training_set])
         matrix = [[0 for i in range(min_val, max_val+1)] for j in range(min_val, max_val+1)]
 
+        miss = 0
+
         for i in range(total):
             actual = int(test_set[i][len(test_set[0])-1])
-            prediction = int(classified[i])
+            prediction = int(classified[i][k_arr.index(k)])
 
             'if category = (1,25) then category 24 corresponds to column and row (24-1)=23'
             'if category = (0,1) then category 1 corresponds to column and row (1-0)=1'
@@ -91,7 +84,7 @@ for data_file in data_files:
         for row in matrix:
             csv_writer.writerow(row)
 
-        accuracy = 'Error rate: %f' %(miss/float(total)*100)
+        accuracy = 'Error rate: %f for K = %i' %(miss/float(total)*100, k)
         write_file.write(accuracy)
 
         write_file.close()
