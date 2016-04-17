@@ -1,5 +1,5 @@
 import sys
-import Math
+import KNNMath
 
 class KNNClassifier:
     """
@@ -25,7 +25,7 @@ class KNNClassifier:
         'Find euclidean distance to all observations in training set'
         euc_dist_list = list()
         for i in range(len(self.training_set)):
-            euc_dist_list.append((Math.euclidean_distance(observation, self.training_set[i]), i))
+            euc_dist_list.append((KNNMath.euclidean_distance(observation, self.training_set[i]), i))
 
         'Sort list of (euclidean distance, observation#). Will automatically sort by distance first'
         euc_dist_list.sort()
@@ -36,5 +36,5 @@ class KNNClassifier:
             observation_num = euc_dist_list[i][1]
             first_k_entries.append(self.training_set[observation_num][len(self.training_set[0])-1])
 
-        return Math.mode(first_k_entries)
+        return KNNMath.mode(first_k_entries)
 

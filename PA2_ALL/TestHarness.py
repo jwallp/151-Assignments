@@ -6,7 +6,7 @@ import KNNClassifier as knn
 import ExemplarProvider as ep
 import sys
 import csv
-import Math
+import KNNMath
 
 TRAIN = 0
 TEST = 1
@@ -28,9 +28,9 @@ with open('datasets/adjusted-abalone.csv', 'w', newline='') as csvfile:
         sex = row[0]
         new_row = list()
 
-        new_row.append(0 if sex == 'M' else 1)
-        new_row.append(0 if sex == 'F' else 1)
-        new_row.append(0 if sex == 'I' else 1)
+        new_row.append(1 if sex == 'M' else 0)
+        new_row.append(1 if sex == 'F' else 0)
+        new_row.append(1 if sex == 'I' else 0)
 
         for i in range(1, len(row)):
             new_row.append(row[i])
@@ -62,17 +62,19 @@ for data_file in data_files:
         total = len(classified)
 
         miss = 0
+        """
         true_positive = 0
         false_positive = 0
         true_negative = 0
         false_negative = 0
+        """
 
         name = 'confusion_matrices/K%d/%s-K%d-matrix.csv'%(k, data_file, k)
         write_file = open(name, 'w', newline='')
         csv_writer = csv.writer(write_file, delimiter=',')
 
-        max_val = Math.max_of_lists([test_set, training_set])
-        min_val = Math.min_of_lists([test_set, training_set])
+        max_val = KNNMath.max_of_lists([test_set, training_set])
+        min_val = KNNMath.min_of_lists([test_set, training_set])
         matrix = [[0 for i in range(min_val, max_val+1)] for j in range(min_val, max_val+1)]
 
         for i in range(total):

@@ -10,7 +10,7 @@ def euclidean_distance(observ1, observ2):
     return math.sqrt(result)
 
 
-def mode( data):
+def mode(data):
     counter = Counter(data)
     max_count = max(counter.values())
     mode = [k for k, v in counter.items() if v == max_count]
