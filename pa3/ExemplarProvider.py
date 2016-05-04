@@ -8,8 +8,8 @@ TRAINING_SET = 1
 
 class ExemplarProvider:
     """
-    This class provides and holds data for the sampler. It opens up the data set file,
-    then deals with any necessary transformations to the data set.
+    This class provides and holds data for the sampler. It opens up the data
+    set file, then deals with any necessary transformations to the data set.
     """
 
     def __init__(self, filename):

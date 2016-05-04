@@ -4,8 +4,8 @@ import random as rand
 
 class SampleWithoutReplacement:
     """
-    This class samples a data set. It splits the data set by either placing a data point
-    in the training set or test set.
+    This class samples a data set. It splits the data set by either placing a
+    data point in the training set or test set.
     """
 
     def __init__(self, filename, sample_percent):

@@ -49,10 +49,18 @@ for data_file in data_files:
     print("\t->Selecting training and test sets ... ")
     sampler.select()
     print("\t->Normalizing training and test sets ...")
-    sampler.z_scale()
+    # TODO: keep z-scale?
+    # sampler.z_scale()
 
-    test_set = sampler.get_test_set()
-    training_set = sampler.get_training_set()
+    # test_set = sampler.get_test_set()
+    # TODO: .array() or .asarray()?
+    test_set = np.array(sampler.get_test_set())
+    # training_set = sampler.get_training_set()
+    training_set = np.array(sampler.get_training_set())
     # classifier = knn.KNNClassifier(test_set, training_set)
+
+    for i in range(0,5):
+        # print "something..."
+        print test_set[i, :]
 
 
