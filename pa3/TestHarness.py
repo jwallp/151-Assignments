@@ -15,9 +15,8 @@ rand.seed(777)
 '''Prompt user to enter percent of data set to use for test set'''
 threshold = int(input("Enter a test set percentage: "))/100.0
 
-'''Adjust abalone.csv if it hasn't been done already'''
+'''Adjust abalone.csv'''
 if not os.path.isfile('datasets/adjusted-abalone.csv'):
-    print("Adjusting abalone.csv...")
     abalone_file = open('datasets/abalone.csv')
     reader = csv.reader(abalone_file)
 
@@ -44,7 +43,7 @@ data_files = ['regression-0.05', 'regression-A', 'regression-B',
 
 for data_file in data_files:
     '''Create a Sampler'''
-    file_name = 'datasets/%s.csv' % (data_file)
+    file_name = 'datasets/%s.csv' %(data_file)
     print("%s is being run:") % (data_file)
     sampler = swr.SampleWithoutReplacement(file_name, threshold)
     print("\t->Selecting training and test sets ... ")
@@ -55,4 +54,5 @@ for data_file in data_files:
     test_set = sampler.get_test_set()
     training_set = sampler.get_training_set()
     # classifier = knn.KNNClassifier(test_set, training_set)
+
 
