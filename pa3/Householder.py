@@ -10,40 +10,40 @@ class Householder:
         self.tableau = tableau
 
     def householder_reflection(self, sub_dim):
+        """ Follows http://www.math.sjsu.edu/~foster/m143m/least_squares_via_Householder.pdf """
+
         if np.allclose(self.tableau, np.triu(self.tableau)):
             return self.tableau
 
+        # Perform householder transformation on sub_m
         sub_m = self.tableau[sub_dim:, sub_dim:]
-        z = self.tableau[sub_dim:,sub_dim]
 
+        z = self.tableau[sub_dim:,sub_dim]
         z0_sign = -1 * np.sign(z[0,0])
-        z_norm2 = np.linalg.norm(z)
+        z_norm = np.linalg.norm(z)
 
         e = [0]*len(z)
         e[0] = 1
         e = np.asmatrix(e).transpose()
 
-        v = np.asmatrix(np.subtract(np.dot(z0_sign*z_norm2, e), z))
-        #write-up uses subtract. Ours used add. Values now align with test.
-        #v = np.asmatrix(np.add(np.dot(z0_sign*z_norm2, e), z))
+        # v = sign(z0)||z||e - z and then v = v/||v||
+        v = np.asmatrix(np.subtract(np.dot(z0_sign*z_norm, e), z))
         v = np.divide(v, np.linalg.norm(v))
 
-        vt = v.getT()
-        vtm = np.dot(vt, sub_m)
-        two_v = np.dot(2, v)
-        two_v_vtm = np.dot(two_v, vtm)
-        sub_m = np.subtract(sub_m, two_v_vtm)
+        # new sub_m = sub_m - 2*v(vT_sub_m)
+        vT_sub_m = np.dot(v.transpose(), sub_m)
+        sub_m = np.subtract(sub_m, np.dot(2*v, vT_sub_m))
+
+        # recombine sub-matrix into main matrix
         self.tableau[sub_dim:, sub_dim:] = sub_m
 
         return self.tableau
 
     def get_R(self):
-        r = None
-
+        R = None
         for i in range(min(self.tableau.shape[0]-1, self.tableau.shape[1])):
-            r = self.householder_reflection(i)
-
-        return r
+            R = self.householder_reflection(i)
+        return R
 
     def back_solve(self):
         m = self.tableau.shape[0]
@@ -67,9 +67,8 @@ class Householder:
 
         return x
 
-    # TODO: how to do this entire method?
     def regression_prediction(self, dataset):
-        # m = dataset.shape[0]
+        #Get number of features of the dataset
         n = dataset.shape[1]
 
         w = self.back_solve()

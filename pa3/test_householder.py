@@ -15,19 +15,51 @@ class TestHouseholder(TestCase):
     def testHH(self):
         print "Testing Householder reflections..."
 
-        expected = np.mat([[-1.6536, -1.1405, -1.2569],
-                                [0, 0.9661, 0.6341], [0, 0, -0.8816], [0, 0, 0],
+
+        print "Test 1 -------------------------------------------------------"
+        expected = np.mat([[-1.65365, -1.14046, -1.25697],
+                                [0, 0.96609, 0.634107], [0, 0, -0.88155], [0, 0, 0],
                                 [0, 0, 0]])
         our_result = self.householder.get_R()
         print expected
         print our_result
-
-        print np.isclose(expected, our_result)
         self.assertTrue(np.allclose(our_result, expected),
-                        msg="FAIL: Householder's implementation")
+                        msg="FAIL: Householder's implementation T1")
 
-        # print self.householder.get_R()
-        # print self.householder.back_solve()
+
+        print "Test 2 -------------------------------------------------------"
+        householder_test = hh.Householder(np.mat([
+            [1.0,-1.0,-1.0],
+            [1.0, 2.0, 3.0],
+            [2.0, 1.0, 1.0],
+            [2.0,-2.0, 1.0],
+            [3.0, 2.0, 1.0]
+        ]))
+        expected = np.mat([
+            [-4.36, -1.15, -2.06],
+            [    0, -3.56, -1.58],
+            [    0,     0,   2.5],
+            [    0,     0,     0],
+            [    0,     0,     0]
+        ])
+        our_result = householder_test.get_R()
+        print expected
+        print our_result
+
+        print "Test 3 -------------------------------------------------------"
+        householder_test = hh.Householder(np.mat([
+            [3.0, -2.0, 3.0],
+            [0.0, 3.0, 5.0],
+            [4.0, 4.0, 4.0],
+        ]))
+        expected = np.mat([
+            [-5, -2, -5],
+            [ 0, -5, -3],
+            [ 0,  0, -4],
+        ])
+        our_result = householder_test.get_R()
+        print expected
+        print our_result
 
     def testBackSolve(self):
         print "Testing back solving..."
@@ -35,5 +67,6 @@ class TestHouseholder(TestCase):
         r = np.mat([[5., 2., 5.], [0., 5., 3.], [0., 0., -4.]])
         h2 = hh.Householder(r)
 
-        print h2.back_solve()
+        result = h2.back_solve()
+        self.assertTrue(np.allclose(result, [0.76, 0.6]), msg="FAIL: Backsolve T1")
 

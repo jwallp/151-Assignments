@@ -28,9 +28,9 @@ if not os.path.isfile('datasets/adjusted-abalone.csv'):
             sex = row[0]
             new_row = list()
 
-            new_row.append(1 if sex == 'M' else 0)
-            new_row.append(1 if sex == 'F' else 0)
-            new_row.append(1 if sex == 'I' else 0)
+            new_row.append(1.0 if sex == 'M' else 0.0)
+            new_row.append(1.0 if sex == 'F' else 0.0)
+            new_row.append(1.0 if sex == 'I' else 0.0)
 
             for i in range(1, len(row)):
                 new_row.append(row[i])
@@ -50,9 +50,6 @@ for data_file in data_files:
     sampler = swr.SampleWithoutReplacement(file_name, threshold)
     print("\t->Selecting training and test sets ... ")
     sampler.select()
-    print("\t->Normalizing training and test sets ...")
-    # TODO: keep z-scale?
-    # sampler.z_scale()
 
     training_set = np.mat(sampler.get_training_set())
     test_set = np.mat(sampler.get_test_set())
