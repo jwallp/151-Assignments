@@ -14,31 +14,24 @@ class Householder:
             return self.tableau
 
         sub_m = self.tableau[sub_dim:, sub_dim:]
-        # print(sub_m)
         z = self.tableau[sub_dim:,sub_dim]
-        #print(z)
 
         z0_sign = -1 * np.sign(z[0,0])
         z_norm2 = np.linalg.norm(z)
-        #print(z_norm2)
 
         e = [0]*len(z)
         e[0] = 1
         e = np.asmatrix(e).transpose()
-        #print(e)
 
         v = np.asmatrix(np.add(np.dot(z0_sign*z_norm2, e), z))
         v = np.divide(v, np.linalg.norm(v))
-        #print (v)
 
         vt = v.getT()
         vtm = np.dot(vt, sub_m)
         two_v = np.dot(2, v)
         two_v_vtm = np.dot(two_v, vtm)
         sub_m = np.subtract(sub_m, two_v_vtm)
-        # print(sub_m)
         self.tableau[sub_dim:, sub_dim:] = sub_m
-        # print(self.tableau)
 
         return self.tableau
 
@@ -67,13 +60,11 @@ class Householder:
 
     # TODO: how to do this entire method?
     def regression_prediction(self, dataset):
-        m = dataset.shape[0]
-        n = self.tableau.shape[1]
+        # m = dataset.shape[0]
+        n = dataset.shape[1]
 
         w = self.back_solve()
-        b = self.tableau[0:n-1, -1]
-
-        y = np.array(dataset[:, -1])
-
-        # for i in range(0, )
+        # multiply the input dataset (which is expected to contain in its
+        # last column its actual classification) with the vector of weights
+        return dataset[:, 0:n-1].dot(w)
 

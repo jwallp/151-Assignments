@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import SampleWithoutReplacement as swr
 import ExemplarProvider as ep
+import Householder as hh
 import csv
 
 TRAIN = 0
@@ -44,7 +45,7 @@ data_files = ['regression-0.05', 'regression-A', 'regression-B',
 for data_file in data_files:
     '''Create a Sampler'''
     file_name = 'datasets/%s.csv' %(data_file)
-    print("%s is being run:") % (data_file)
+    print("\n%s is being run:") % (data_file)
 
     sampler = swr.SampleWithoutReplacement(file_name, threshold)
     print("\t->Selecting training and test sets ... ")
@@ -53,10 +54,21 @@ for data_file in data_files:
     # TODO: keep z-scale?
     # sampler.z_scale()
 
-    # test_set = sampler.get_test_set()
-    # TODO: .array() or .asarray()?
-    test_set = np.mat(sampler.get_test_set())
-    # training_set = sampler.get_training_set()
     training_set = np.mat(sampler.get_training_set())
-    # classifier = knn.KNNClassifier(test_set, training_set)
+    test_set = np.mat(sampler.get_test_set())
+
+    '''
+    Perform QR decomposition of training set in order to solve least
+    squares regresion
+    '''
+    trainer = hh.Householder(training_set)
+    trainer.get_R()
+
+    predictions = trainer.regression_prediction(test_set)
+    actual = test_set[:, -1].T
+    difference = predictions - actual
+
+    ''' Compute RMSE of predictions for current dataset '''
+    rmse = np.sqrt(difference.dot(difference.T)[0, 0] / test_set.shape[0])
+    print "\t->RMSE=%s" % rmse
 
