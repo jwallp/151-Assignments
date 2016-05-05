@@ -54,7 +54,14 @@ class Householder:
             for j in range(i+1, n-1):
                 xi = xi - self.tableau[i, j] * x[j]
 
-            x[i] = xi / self.tableau[i, i]
+            # this if-statement is needed for the abalone dataset because of
+            # the binary proxy variables for sex can cause divide-by-zero errors
+            if self.tableau[i, i] == 0.:
+                # TODO: how to handle this case?
+                x[i] = 0.
+                # x[i] = xi
+            else:
+                x[i] = xi / self.tableau[i, i]
 
         return x
 
