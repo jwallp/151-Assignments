@@ -45,6 +45,7 @@ for data_file in data_files:
     '''Create a Sampler'''
     file_name = 'datasets/%s.csv' %(data_file)
     print("%s is being run:") % (data_file)
+
     sampler = swr.SampleWithoutReplacement(file_name, threshold)
     print("\t->Selecting training and test sets ... ")
     sampler.select()
@@ -54,13 +55,8 @@ for data_file in data_files:
 
     # test_set = sampler.get_test_set()
     # TODO: .array() or .asarray()?
-    test_set = np.array(sampler.get_test_set())
+    test_set = np.mat(sampler.get_test_set())
     # training_set = sampler.get_training_set()
-    training_set = np.array(sampler.get_training_set())
+    training_set = np.mat(sampler.get_training_set())
     # classifier = knn.KNNClassifier(test_set, training_set)
-
-    for i in range(0,5):
-        # print "something..."
-        print test_set[i, :]
-
 
