@@ -15,7 +15,7 @@ class TestHouseholder(TestCase):
     def testHH(self):
         print "Testing Householder reflections..."
 
-        expected = -1 * np.mat([[-1.6536, -1.1405, -1.2569],
+        expected = np.mat([[-1.6536, -1.1405, -1.2569],
                                 [0, 0.9661, 0.6341], [0, 0, -0.8816], [0, 0, 0],
                                 [0, 0, 0]])
         our_result = self.householder.get_R()
