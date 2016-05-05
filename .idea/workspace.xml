@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b30ee3b-105a-48e4-8de7-a06aa71dc8ad" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pa3/test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/pa.iml" afterPath="$PROJECT_DIR$/.idea/pa.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pa3/Householder.py" afterPath="$PROJECT_DIR$/pa3/Householder.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pa3/datasets/adjusted-abalone.csv" afterPath="$PROJECT_DIR$/pa3/datasets/adjusted-abalone.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pa3/test_householder.py" afterPath="$PROJECT_DIR$/pa3/test_householder.py" />
     </list>
     <ignored path="pa.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -99,8 +93,8 @@
       <file leaf-file-name="Householder.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pa3/Householder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="92">
-              <caret line="26" column="75" selection-start-line="26" selection-start-column="75" selection-end-line="26" selection-end-column="75" />
+            <state relative-caret-position="1309">
+              <caret line="77" column="39" selection-start-line="77" selection-start-column="39" selection-end-line="77" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -109,7 +103,7 @@
       <file leaf-file-name="test_householder.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pa3/test_householder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
+            <state relative-caret-position="189">
               <caret line="17" column="18" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
@@ -963,7 +957,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pa3/test_householder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
+        <state relative-caret-position="189">
           <caret line="17" column="18" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
@@ -973,8 +967,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pa3/Householder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="26" column="75" selection-start-line="26" selection-start-column="75" selection-end-line="26" selection-end-column="75" />
+        <state relative-caret-position="1309">
+          <caret line="77" column="39" selection-start-line="77" selection-start-column="39" selection-end-line="77" selection-end-column="39" />
           <folding />
         </state>
       </provider>

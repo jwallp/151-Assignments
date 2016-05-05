@@ -76,36 +76,3 @@ class Householder:
         # multiply the input dataset (which is expected to contain in its
         # last column its actual classification) with the vector of weights
         return dataset[:, 0:n-1].dot(w)
-
-
-    def regression_predictionb(self, dataset):
-        # m = dataset.shape[0]
-        n = dataset.shape[1]
-
-        w = self.back_solveb()
-        # multiply the input dataset (which is expected to contain in its
-        # last column its actual classification) with the vector of weights
-        return dataset[:, 0:n - 1].dot(w)
-
-
-    def back_solveb(self):
-        m = self.tableau.shape[0]
-        n = self.tableau.shape[1]
-        x = np.empty(n - 1)
-
-        for i in range(n - 2, -1, -1):
-            xi = self.tableau[i, n - 1]
-
-            for j in range(i + 1, n - 1):
-                xi = xi - self.tableau[i, j] * x[j]
-
-            # this if-statement is needed for the abalone dataset because of
-            # the binary proxy variables for sex can cause divide-by-zero errors
-            if self.tableau[i, i] == 0.:
-                # TODO: how to handle this case?
-                x[i] = 500.
-                # x[i] = xi
-            else:
-                x[i] = xi / self.tableau[i, i]
-
-        return x
