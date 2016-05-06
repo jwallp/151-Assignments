@@ -5,6 +5,8 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pa3/Householder.py" afterPath="$PROJECT_DIR$/pa3/Householder.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pa3/test_householder.py" afterPath="$PROJECT_DIR$/pa3/test_householder.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pa3/testfiles/numpy_backsolve.csv" afterPath="$PROJECT_DIR$/pa3/testfiles/numpy_backsolve.csv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pa3/testfiles/our_backsolve.csv" afterPath="$PROJECT_DIR$/pa3/testfiles/our_backsolve.csv" />
     </list>
     <ignored path="pa.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -22,7 +24,7 @@
     <SUITE FILE_PATH="coverage/pa$TestHarness__2_.coverage" NAME="TestHarness (2) Coverage Results" MODIFIED="1462476138860" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pa3" />
     <SUITE FILE_PATH="coverage/pa$test.coverage" NAME="test Coverage Results" MODIFIED="1460152248232" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pa1" />
     <SUITE FILE_PATH="coverage/pa$TestHarness__1_.coverage" NAME="TestHarness (1) Coverage Results" MODIFIED="1462427793033" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PA2_ALL" />
-    <SUITE FILE_PATH="coverage/pa$Unittests_in_test_householder.coverage" NAME="Unittests in test_householder Coverage Results" MODIFIED="1462564220362" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pa3" />
+    <SUITE FILE_PATH="coverage/pa$Unittests_in_test_householder.coverage" NAME="Unittests in test_householder Coverage Results" MODIFIED="1462567439809" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pa3" />
     <SUITE FILE_PATH="coverage/pa$SampleWithoutReplacement.coverage" NAME="SampleWithoutReplacement Coverage Results" MODIFIED="1460149347292" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pa1" />
     <SUITE FILE_PATH="coverage/pa$test__1_.coverage" NAME="test (1) Coverage Results" MODIFIED="1462474873903" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pa3" />
   </component>
@@ -50,8 +52,8 @@
       <file leaf-file-name="TestHarness.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pa3/TestHarness.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="25" selection-end-column="55" />
+            <state relative-caret-position="173">
+              <caret line="54" column="20" selection-start-line="54" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -62,18 +64,18 @@
       <file leaf-file-name="Householder.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pa3/Householder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-325">
-              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+            <state relative-caret-position="156">
+              <caret line="60" column="40" selection-start-line="60" selection-start-column="40" selection-end-line="60" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_householder.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="test_householder.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pa3/test_householder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="94" column="0" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
+            <state relative-caret-position="428">
+              <caret line="112" column="0" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -81,11 +83,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="numpy_backsolve.csv" pinned="false" current-in-tab="true">
+      <file leaf-file-name="numpy_backsolve.csv" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pa3/testfiles/numpy_backsolve.csv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="170">
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -154,9 +156,10 @@
         <option value="$PROJECT_DIR$/pa3/test.py" />
         <option value="$PROJECT_DIR$/PA2_ALL/TestHarness.py" />
         <option value="$PROJECT_DIR$/pa3/TestHarness.py" />
+        <option value="$PROJECT_DIR$/pa3/testfiles/our_backsolve.csv" />
+        <option value="$PROJECT_DIR$/pa3/testfiles/numpy_backsolve.csv" />
         <option value="$PROJECT_DIR$/pa3/Householder.py" />
         <option value="$PROJECT_DIR$/pa3/test_householder.py" />
-        <option value="$PROJECT_DIR$/pa3/testfiles/numpy_backsolve.csv" />
       </list>
     </option>
   </component>
@@ -644,34 +647,34 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 12h 41m 28s.xml">
+    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 13h 36m 27s.xml">
       <configuration name="Unittests in test_householder" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 12h 43m 13s.xml">
+    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 13h 40m 03s.xml">
       <configuration name="Unittests in test_householder" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 12h 44m 02s.xml">
+    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 13h 40m 16s.xml">
       <configuration name="Unittests in test_householder" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 12h 47m 33s.xml">
+    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 13h 40m 37s.xml">
       <configuration name="Unittests in test_householder" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 12h 47m 48s.xml">
+    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 13h 40m 51s.xml">
       <configuration name="Unittests in test_householder" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 12h 48m 11s.xml">
+    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 13h 40m 55s.xml">
       <configuration name="Unittests in test_householder" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 12h 48m 50s.xml">
+    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 13h 41m 08s.xml">
       <configuration name="Unittests in test_householder" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 12h 49m 58s.xml">
+    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 13h 43m 06s.xml">
       <configuration name="Unittests in test_householder" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 12h 50m 07s.xml">
+    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 13h 43m 44s.xml">
       <configuration name="Unittests in test_householder" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 12h 50m 20s.xml">
+    <history-entry file="Unittests_in_test_householder - 2016.05.06 at 13h 44m 00s.xml">
       <configuration name="Unittests in test_householder" configurationId="tests" />
     </history-entry>
   </component>
@@ -681,15 +684,15 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17673522" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.53481895" sideWeight="0.311054" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31754875" sideWeight="0.31426734" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.53481895" sideWeight="0.688946" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31754875" sideWeight="0.68573266" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32917318" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39972144" sideWeight="0.4974293" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -917,16 +920,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PA2_ALL/KNNMath.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/PA2_ALL/TestHarness.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -959,24 +952,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pa3/TestHarness.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="25" selection-end-column="55" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pa3/Householder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-325">
-          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pa3/testfiles/def_result.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -993,13 +968,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pa3/test_householder.py">
+    <entry file="file://$PROJECT_DIR$/PA2_ALL/KNNMath.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="94" column="0" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
+        <state relative-caret-position="255">
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding>
-            <element signature="e#0#29#0" expanded="true" />
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pa3/testfiles/numpy_backsolve.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1011,11 +994,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pa3/testfiles/numpy_backsolve.csv">
+    <entry file="file://$PROJECT_DIR$/pa3/TestHarness.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="173">
+          <caret line="54" column="20" selection-start-line="54" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pa3/Householder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="60" column="40" selection-start-line="60" selection-start-column="40" selection-end-line="60" selection-end-column="40" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pa3/test_householder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="428">
+          <caret line="112" column="0" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

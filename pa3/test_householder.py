@@ -73,13 +73,16 @@ class TestHouseholder(TestCase):
         h2 = hh.Householder(r)
 
         result = h2.back_solve()
-        self.assertTrue(np.allclose(result, [0.76, 0.6]), msg="FAIL: Backsolve T1")
+        numpy_backsolve = np.linalg.lstsq(h2.get_coefficient(), h2.get_b())[0]
+
+        self.assertTrue(np.allclose(np.asmatrix(result).transpose(), numpy_backsolve), msg="FAIL: Backsolve T1")
 
         file_name = 'datasets/adjusted-abalone.csv'
         sampler = swr.SampleWithoutReplacement(file_name, .10)
         sampler.select()
 
         training_set = np.mat(sampler.get_training_set())
+        test_set = np.mat(sampler.get_test_set())
         trainer = hh.Householder(training_set)
         trainer.get_R() #QR decomposition
 
@@ -88,9 +91,24 @@ class TestHouseholder(TestCase):
         np.savetxt("testfiles/our_backsolve.csv", np.asarray(our_backsolve), delimiter=",")
         np.savetxt("testfiles/numpy_backsolve.csv", np.asarray(numpy_backsolve), delimiter=",")
 
-        print our_backsolve
-        print numpy_backsolve
-        self.assertTrue(np.allclose(our_backsolve, numpy_backsolve),
+        print"RMSE---------------------------------------------"
+        predictions = trainer.regression_prediction(test_set)
+        actual = test_set[:, -1].T
+        difference = predictions - actual
+
+        ''' Compute RMSE of predictions for current dataset '''
+        rmse = np.sqrt(difference.dot(difference.T)[0, 0] / test_set.shape[0])
+        print "\t->RMSE ours=%s" % rmse
+
+        predictions2 = trainer.regression_prediction2(test_set)
+        actual = test_set[:, -1].T
+        difference = predictions2 - actual
+
+        ''' Compute RMSE of predictions for current dataset '''
+        rmse = np.sqrt(difference.dot(difference.T)[0, 0] / test_set.shape[0])
+        print "\t->RMSE numpy's=%s" % rmse
+
+        self.assertTrue(np.allclose(np.asmatrix(our_backsolve).transpose(), numpy_backsolve),
                         msg="FAIL: Backsolve T2")
 
 

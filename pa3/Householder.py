@@ -74,7 +74,14 @@ class Householder:
         w = self.back_solve()
         # multiply the input dataset (which is expected to contain in its
         # last column its actual classification) with the vector of weights
+        a = dataset[:, 0:n-1].dot(w)
+
         return dataset[:, 0:n-1].dot(w)
+
+    def regression_prediction2(self, dataset):
+        # Get number of features of the dataset
+        n = dataset.shape[1]
+        return dataset[:, 0:n - 1].dot(np.asarray(np.linalg.lstsq(self.get_coefficient(), self.get_b())[0]))
 
     def get_coefficient(self):
         n = self.tableau.shape[1]
