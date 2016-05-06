@@ -75,3 +75,11 @@ class Householder:
         # multiply the input dataset (which is expected to contain in its
         # last column its actual classification) with the vector of weights
         return dataset[:, 0:n-1].dot(w)
+
+    def get_coefficient(self):
+        n = self.tableau.shape[1]
+        return self.tableau[:, 0:n-1]
+
+    def get_b(self):
+        n = self.tableau.shape[1]
+        return self.tableau[:, n-1:n]
