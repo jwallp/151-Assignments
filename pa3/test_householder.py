@@ -1,5 +1,6 @@
 from unittest import TestCase
 import numpy as np
+import random as rand
 np.set_printoptions(threshold='nan')
 import csv
 
@@ -77,38 +78,49 @@ class TestHouseholder(TestCase):
 
         self.assertTrue(np.allclose(np.asmatrix(result).transpose(), numpy_backsolve), msg="FAIL: Backsolve T1")
 
-        file_name = 'datasets/adjusted-abalone.csv'
-        sampler = swr.SampleWithoutReplacement(file_name, .10)
+    def testAbaloneRMSE(self):
+        print "Testing abalone data set RMSE..."
+
+        #sample data set without sex columns
+        rand.seed(777)
+        sampler = swr.SampleWithoutReplacement('datasets/adjusted-abalone.csv', .10)
         sampler.select()
 
-        training_set = np.mat(sampler.get_training_set())
-        test_set = np.mat(sampler.get_test_set())
-        trainer = hh.Householder(training_set)
+        test_set1 = np.mat(sampler.get_test_set())
+        trainer = hh.Householder(np.mat(sampler.get_training_set()))
         trainer.get_R() #QR decomposition
+        our_backsolve_without_sex = trainer.back_solve()
 
-        our_backsolve = trainer.back_solve()
-        numpy_backsolve = np.linalg.lstsq(trainer.get_coefficient(), trainer.get_b())[0]
-        np.savetxt("testfiles/our_backsolve.csv", np.asarray(our_backsolve), delimiter=",")
-        np.savetxt("testfiles/numpy_backsolve.csv", np.asarray(numpy_backsolve), delimiter=",")
+        #sample data set with sex columns
+        rand.seed(777)
+        sampler2 = swr.SampleWithoutReplacement('datasets/adjusted-abalone2.csv', .10)
+        sampler2.select()
+
+        test_set2 = np.mat(sampler.get_test_set())
+        trainer2 = hh.Householder(np.mat(sampler2.get_training_set()))
+        trainer2.get_R() #QR decomposition
+        numpy_backsolve_with_sex = np.linalg.lstsq(trainer2.get_coefficient(), trainer2.get_b())[0]
+
+        #BACKSOLVE obviously produces different results between the two.
+        np.savetxt("testfiles/our_backsolve.csv", np.asarray(our_backsolve_without_sex), delimiter=",")
+        np.savetxt("testfiles/numpy_backsolve.csv", np.asarray(numpy_backsolve_with_sex), delimiter=",")
 
         print"RMSE---------------------------------------------"
-        predictions = trainer.regression_prediction(test_set)
-        actual = test_set[:, -1].T
+        #RMSE of the dataset without sex columns
+        predictions = trainer.regression_prediction(test_set1)
+        actual = test_set1[:, -1].T
         difference = predictions - actual
 
-        ''' Compute RMSE of predictions for current dataset '''
-        rmse = np.sqrt(difference.dot(difference.T)[0, 0] / test_set.shape[0])
-        print "\t->RMSE ours=%s" % rmse
+        rmse = np.sqrt(difference.dot(difference.T)[0, 0] / test_set1.shape[0])
+        print "\t->RMSE ours without sex columns=%s" % rmse
 
-        predictions2 = trainer.regression_prediction2(test_set)
-        actual = test_set[:, -1].T
+        #RMSE of the dataset with sex columns
+        predictions2 = trainer.regression_prediction2(test_set2).T
+        actual = test_set2[:, -1].T
         difference = predictions2 - actual
 
-        ''' Compute RMSE of predictions for current dataset '''
-        rmse = np.sqrt(difference.dot(difference.T)[0, 0] / test_set.shape[0])
-        print "\t->RMSE numpy's=%s" % rmse
+        rmse2 = np.sqrt(difference.dot(difference.T)[0, 0] / test_set2.shape[0])
+        print "\t->RMSE numpy with sex columns=%s" % rmse2
 
-        self.assertTrue(np.allclose(np.asmatrix(our_backsolve).transpose(), numpy_backsolve),
-                        msg="FAIL: Backsolve T2")
-
-
+        self.assertTrue(np.allclose(rmse, rmse2), msg="FAIL: RMSE Abalone test")
+        

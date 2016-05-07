@@ -17,12 +17,12 @@ rand.seed(777)
 threshold = int(input("Enter a test set percentage: "))/100.0
 
 '''Adjust abalone.csv'''
-if not os.path.isfile('datasets/adjusted-abalone.csv'):
+if not os.path.isfile('datasets/adjusted-abalone2.csv'):
     abalone_file = open('datasets/abalone.csv')
     reader = csv.reader(abalone_file)
 
     #new format:[M, F, I, rest of stuff]
-    with open('datasets/adjusted-abalone.csv', 'w') as csvfile:
+    with open('datasets/adjusted-abalone2.csv', 'w') as csvfile:
         csv_writer = csv.writer(csvfile, delimiter=',')
         for row in reader:
             sex = row[0]
