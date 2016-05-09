@@ -1,0 +1,9 @@
+regression-0.05 RMSE = 0.0520017094856
+
+regression-A RMSE = 0.101817558935
+
+regression-B RMSE = 0.298778492254
+
+regression-C RMSE = 0.151953813421
+
+adjusted-abalone RMSE = 2.13199131439

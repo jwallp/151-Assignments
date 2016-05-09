@@ -2,11 +2,10 @@ from unittest import TestCase
 import numpy as np
 import random as rand
 np.set_printoptions(threshold='nan')
-import csv
-
 import Householder as hh
 import SampleWithoutReplacement as swr
 
+RAND_NUM = 568
 
 class TestHouseholder(TestCase):
     def setUp(self):
@@ -70,19 +69,23 @@ class TestHouseholder(TestCase):
     def testBackSolve(self):
         print "Testing back solving..."
 
+        print "Test 1 -------------------------------------------------------"
+
         r = np.mat([[5., 2., 5.], [0., 5., 3.], [0., 0., -4.]])
         h2 = hh.Householder(r)
 
         result = h2.back_solve()
         numpy_backsolve = np.linalg.lstsq(h2.get_coefficient(), h2.get_b())[0]
+        print numpy_backsolve
+        print np.asmatrix(result).transpose()
 
         self.assertTrue(np.allclose(np.asmatrix(result).transpose(), numpy_backsolve), msg="FAIL: Backsolve T1")
 
     def testAbaloneRMSE(self):
-        print "Testing abalone data set RMSE..."
+        print "Testing abalone data set RMSE.txt..."
 
         #sample data set without sex columns
-        rand.seed(777)
+        rand.seed(RAND_NUM)
         sampler = swr.SampleWithoutReplacement('datasets/adjusted-abalone.csv', .10)
         sampler.select()
 
@@ -92,35 +95,63 @@ class TestHouseholder(TestCase):
         our_backsolve_without_sex = trainer.back_solve()
 
         #sample data set with sex columns
-        rand.seed(777)
-        sampler2 = swr.SampleWithoutReplacement('datasets/adjusted-abalone2.csv', .10)
+        rand.seed(RAND_NUM)
+        sampler2 = swr.SampleWithoutReplacement('datasets/adjusted-abalone.csv', .10)
         sampler2.select()
 
-        test_set2 = np.mat(sampler.get_test_set())
+        test_set2 = np.mat(sampler2.get_test_set())
         trainer2 = hh.Householder(np.mat(sampler2.get_training_set()))
         trainer2.get_R() #QR decomposition
         numpy_backsolve_with_sex = np.linalg.lstsq(trainer2.get_coefficient(), trainer2.get_b())[0]
 
-        #BACKSOLVE obviously produces different results between the two.
-        np.savetxt("testfiles/our_backsolve.csv", np.asarray(our_backsolve_without_sex), delimiter=",")
-        np.savetxt("testfiles/numpy_backsolve.csv", np.asarray(numpy_backsolve_with_sex), delimiter=",")
 
-        print"RMSE---------------------------------------------"
-        #RMSE of the dataset without sex columns
+        print "Test 1 abalone -------------------------------------------------------"
+        #RMSE.txt of the dataset without sex columns
         predictions = trainer.regression_prediction(test_set1)
         actual = test_set1[:, -1].T
         difference = predictions - actual
 
         rmse = np.sqrt(difference.dot(difference.T)[0, 0] / test_set1.shape[0])
-        print "\t->RMSE ours without sex columns=%s" % rmse
+        print "\t->RMSE ours =%s" % rmse
 
-        #RMSE of the dataset with sex columns
-        predictions2 = trainer.regression_prediction2(test_set2).T
+        #RMSE.txt of the dataset with sex columns
+        predictions2 = trainer2.regression_prediction2(test_set2).T
         actual = test_set2[:, -1].T
         difference = predictions2 - actual
 
         rmse2 = np.sqrt(difference.dot(difference.T)[0, 0] / test_set2.shape[0])
-        print "\t->RMSE numpy with sex columns=%s" % rmse2
+        print "\t->RMSE numpy's =%s" % rmse2
 
-        self.assertTrue(np.allclose(rmse, rmse2), msg="FAIL: RMSE Abalone test")
-        
+    def test_RMSE(self):
+        data_files = ['regression-0.05', 'regression-A', 'regression-B',
+                      'regression-C', 'adjusted-abalone']
+
+        i = 0
+        for name in data_files:
+            i += 1
+            print "Test %d %s -------------------------------------------------------" %(i,name)
+            # sample data set without sex columns
+            rand.seed(RAND_NUM)
+            filename = 'datasets/%s.csv' % name
+            sampler = swr.SampleWithoutReplacement(filename, .10)
+            sampler.select()
+
+            test_set = np.mat(sampler.get_test_set())
+            trainer = hh.Householder(np.mat(sampler.get_training_set()))
+            trainer.get_R()  # QR decomposition
+
+            # our least squares
+            predictions = trainer.regression_prediction(test_set)
+            actual = test_set[:, -1].T
+            difference = predictions - actual
+
+            rmse = np.sqrt(difference.dot(difference.T)[0, 0] / test_set.shape[0])
+            print "\t->RMSE ours =%s" % rmse
+
+            # numpy least squares
+            predictions2 = trainer.regression_prediction2(test_set).T
+            actual = test_set[:, -1].T
+            difference = predictions2 - actual
+
+            rmse2 = np.sqrt(difference.dot(difference.T)[0, 0] / test_set.shape[0])
+            print "\t->RMSE numpy's =%s" % rmse2
