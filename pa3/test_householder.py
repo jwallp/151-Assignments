@@ -5,7 +5,7 @@ np.set_printoptions(threshold='nan')
 import Householder as hh
 import SampleWithoutReplacement as swr
 
-RAND_NUM = 568
+RAND_NUM = 777
 
 class TestHouseholder(TestCase):
     def setUp(self):
@@ -138,6 +138,16 @@ class TestHouseholder(TestCase):
 
             test_set = np.mat(sampler.get_test_set())
             trainer = hh.Householder(np.mat(sampler.get_training_set()))
+
+            # numpy least squares
+            predictions2 = trainer.regression_prediction2(test_set).T
+            actual = test_set[:, -1].T
+            difference = predictions2 - actual
+
+            rmse2 = np.sqrt(difference.dot(difference.T)[0, 0] / test_set.shape[0])
+            print "\t->RMSE numpy's =%s" % rmse2
+
+
             trainer.get_R()  # QR decomposition
 
             # our least squares
@@ -148,10 +158,3 @@ class TestHouseholder(TestCase):
             rmse = np.sqrt(difference.dot(difference.T)[0, 0] / test_set.shape[0])
             print "\t->RMSE ours =%s" % rmse
 
-            # numpy least squares
-            predictions2 = trainer.regression_prediction2(test_set).T
-            actual = test_set[:, -1].T
-            difference = predictions2 - actual
-
-            rmse2 = np.sqrt(difference.dot(difference.T)[0, 0] / test_set.shape[0])
-            print "\t->RMSE numpy's =%s" % rmse2

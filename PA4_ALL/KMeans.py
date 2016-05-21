@@ -4,8 +4,9 @@ import sys
 
 
 def k_means(training_set, k):
-    clusters = [[None] for i in range(k)]
-    centroids = [None]*k
+    clusters = [[None] for i in range(k)]   # cluster[i] refers to data points around centroid[i]
+    centroids = [None]*k                    # central points for clusters
+    wcss = [None]*len(training_set)         # euclidean distances between data & centroids
 
     # Initially randomly select K observations as centroids
     for i in range(k):
@@ -28,6 +29,7 @@ def k_means(training_set, k):
                     min_dist = curr_dist
                     min_index = j
 
+            wcss[min_index] = min_dist
             if training_set[i] not in clusters[min_index]:
                 clusters[min_index].append(training_set[i])
                 changed = True
@@ -36,7 +38,7 @@ def k_means(training_set, k):
         if changed is True:
             centroids = recalculate_centroids(clusters, centroids)
 
-    return (centroids, clusters)
+    return (centroids, clusters, wcss)
 
 
 def euclidean_distance(observ1, observ2):
@@ -50,7 +52,7 @@ def recalculate_centroids(clusters, centroids):
     new_centroids = [None]*len(centroids)
 
     # For each cluster, sum up the values of each feature. Then, take the average
-    # of each feature. This will be the new centroid for the cluster.
+    # of each each feature's sum. This will be the new centroid for the cluster.
     for i in range(len(clusters)):
         feature_averages = [None] * len(clusters[i])
 
