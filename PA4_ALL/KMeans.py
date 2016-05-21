@@ -13,7 +13,7 @@ def k_means(training_set, k):
 
     for i in range(k):
         index_selected = np.random.randint(0, len(training_set))
-        centroids[i]=training_set[index_selected]
+        centroids[i]=training_set[index_selected][:-1]
 
     print "centroids are :%s" %centroids
 
@@ -29,14 +29,17 @@ def k_means(training_set, k):
 
             for j in range(k):
                 #curr_dist = euclidean_distance(training_set[i], centroids[j])
-                curr_dist = np.linalg.norm(np.array(training_set[i])-np.array(centroids[j]))
+                print np.array(training_set)[i, :-1]
+                print np.array(centroids[j])
+                print "\n"
+                curr_dist = np.linalg.norm(np.array(training_set)[i,:-1]-np.array(centroids[j]))
                 if curr_dist < min_dist:
                     min_dist = curr_dist
                     min_index = j
 
             wcss[i] = min_dist
-            if training_set[i] not in clusters[min_index]:
-                clusters[min_index].append(training_set[i])
+            if training_set[i][:-1] not in clusters[min_index]:
+                clusters[min_index].append(training_set[i][:-1])
                 changed = True
 
         # If observations changed clusters, then recalculate the centroids.
