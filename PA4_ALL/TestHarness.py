@@ -58,8 +58,9 @@ for i in [1, 2, 4, 8, 16]:
     for j in range(len(results.clusters)):
         print "Cluster %d :" % j
         arr = np.array(results.clusters[j])
-        cluster_mean = np.mean(arr, axis=0)
-        cluster_SD = np.std(arr, axis=0)
+        print arr
+        cluster_mean = np.mean(arr[:, :-1], axis=0)
+        cluster_SD = np.std(arr[:, :-1], axis=0)
         weights = np.linalg.lstsq(arr[:, :-1], arr[:, -1])[0]
         weights_for_each_cluster[j] = weights
 
