@@ -5,6 +5,12 @@ import sys
 
 
 def k_means(training_set, k):
+    """
+    :param training_set: list of observations
+    :param k: number of clusters to create
+    :return: tuple of centroids, clusters, WCSS
+    """
+
     clusters = [[] for i in range(k)]       # cluster[i] refers to data points around centroid[i]
     centroids = [None]*k                    # central points for clusters
     wcss = [None]*len(training_set)         # euclidean distances between data & centroids
@@ -13,9 +19,9 @@ def k_means(training_set, k):
 
     for i in range(k):
         index_selected = np.random.randint(0, len(training_set))
-        centroids[i]=training_set[index_selected][:-1]
+        centroids[i]=training_set[index_selected]
 
-    print "centroids are :%s" %centroids
+    # print "centroids are :%s" %centroids
 
     # Recalculate centroids and re-assign clusters until convergence.
     changed = True
@@ -29,23 +35,24 @@ def k_means(training_set, k):
 
             for j in range(k):
                 #curr_dist = euclidean_distance(training_set[i], centroids[j])
-                print np.array(training_set)[i, :-1]
-                print np.array(centroids[j])
-                print "\n"
-                curr_dist = np.linalg.norm(np.array(training_set)[i,:-1]-np.array(centroids[j]))
+                #print np.array(training_set)[i]
+                #print np.array(centroids[j])
+                #print "\n"
+                # curr_dist = np.linalg.norm(np.array(training_set[i])-np.array(centroids[j]))
+                curr_dist = euclidean_distance(training_set[i], centroids[j])
                 if curr_dist < min_dist:
                     min_dist = curr_dist
                     min_index = j
 
             wcss[i] = min_dist
-            if training_set[i][:-1] not in clusters[min_index]:
-                clusters[min_index].append(training_set[i][:-1])
+            if training_set[i] not in clusters[min_index]:
+                clusters[min_index].append(training_set[i])
                 changed = True
 
         # If observations changed clusters, then recalculate the centroids.
         if changed is True:
             centroids = recalculate_centroids(clusters, centroids)
-            print "centroids are :%s" %centroids
+            # print "centroids are :%s" %centroids
 
     name = 'k_%d_means' %k
     k_means_info = collections.namedtuple(name, ['centroids', 'clusters', 'wcss'])

@@ -4,6 +4,7 @@ import SampleWithoutReplacement as swr
 import csv
 import KMeans
 import sys
+from scipy.cluster.vq import vq, kmeans, whiten
 
 '''Initialization'''
 rand.seed(777)
@@ -33,10 +34,14 @@ print "Done adjusting abalone.csv ..."
 sampler = swr.SampleWithoutReplacement('datasets/adjusted-abalone.csv', .10)
 sampler.select()
 sampler.z_scale()
+
 training_set = sampler.get_training_set()
 test_set = sampler.get_test_set()
 
 global_wcss = list()
+
+
+#blah = kmeans(np.array(training_set)[:, :-1], 1)
 
 for i in [1, 2, 4, 8, 16]:
     print "For K=%d:" %i
@@ -51,14 +56,15 @@ for i in [1, 2, 4, 8, 16]:
 
     weights_for_each_cluster = [None]*i
     for j in range(len(results.clusters)):
+        print "Cluster %d :" % j
         arr = np.array(results.clusters[j])
         cluster_mean = np.mean(arr, axis=0)
         cluster_SD = np.std(arr, axis=0)
         weights = np.linalg.lstsq(arr[:, :-1], arr[:, -1])[0]
         weights_for_each_cluster[j] = weights
 
-    for j in range(len(cluster_mean)):
-        print "->Cluster %d mean = %d, SD = %d" % (j, cluster_mean[j], cluster_SD[j])
+        for k in range(len(cluster_mean)):
+            print "      ->Feature %d mean = %f, SD = %f" % (k, cluster_mean[k], cluster_SD[k])
 
     # Cluster the test set
     test_clusters = [[] for a in range(i)]
@@ -67,7 +73,7 @@ for i in [1, 2, 4, 8, 16]:
         min_index = sys.maxint
 
         for k in range(len(results.centroids)):
-            curr_dist = np.linalg.norm(np.array(test_set)[j ,:-1] - np.array(results.centroids[k]))
+            curr_dist = KMeans.euclidean_distance(test_set[j], results.centroids[k])
             if curr_dist < min_dist:
                 min_dist = curr_dist
                 min_index = k
@@ -79,7 +85,7 @@ for i in [1, 2, 4, 8, 16]:
     for index in range(i):
         current_weight = weights_for_each_cluster[index]
         for observation in test_clusters[index]:
-            predicted_y = np.array(observation).dot(np.array(current_weight))
+            predicted_y = np.array(observation)[:-1].dot(np.array(current_weight))
             cluster_predictions[index].append(predicted_y)
 
     # Calculate RMSE by comparing predictions and actual values
