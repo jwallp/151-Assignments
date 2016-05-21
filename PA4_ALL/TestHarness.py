@@ -4,6 +4,7 @@ import SampleWithoutReplacement as swr
 import csv
 import KMeans
 import sys
+import math
 from scipy.cluster.vq import vq, kmeans, whiten
 
 '''Initialization'''
@@ -46,9 +47,11 @@ global_wcss = list()
 for i in [1, 2, 4, 8, 16]:
     print "For K=%d:" %i
     results = KMeans.k_means(training_set, i)
-    print "->WCSS: %s" % results.wcss
+    # print "->WCSS: %s" % results.wcss
     global_wcss.append(sum(results.wcss))
-    print "->Centroids: %s" % results.centroids
+    print "->Centroids:"
+    for j in range(len(results.centroids)):
+        print "\t->Centroid %d:\n\t%s" %(j, results.centroids[j])
 
     # Calculate Mean & SD
     cluster_mean = None
@@ -58,14 +61,13 @@ for i in [1, 2, 4, 8, 16]:
     for j in range(len(results.clusters)):
         print "Cluster %d :" % j
         arr = np.array(results.clusters[j])
-        print arr
         cluster_mean = np.mean(arr[:, :-1], axis=0)
         cluster_SD = np.std(arr[:, :-1], axis=0)
         weights = np.linalg.lstsq(arr[:, :-1], arr[:, -1])[0]
         weights_for_each_cluster[j] = weights
 
         for k in range(len(cluster_mean)):
-            print "      ->Feature %d mean = %f, SD = %f" % (k, cluster_mean[k], cluster_SD[k])
+            print "\t->Feature %d mean = %f, SD = %f" % (k, cluster_mean[k], cluster_SD[k])
 
     # Cluster the test set
     test_clusters = [[] for a in range(i)]
@@ -88,14 +90,24 @@ for i in [1, 2, 4, 8, 16]:
         for observation in test_clusters[index]:
             predicted_y = np.array(observation)[:-1].dot(np.array(current_weight))
             cluster_predictions[index].append(predicted_y)
+    #print cluster_predictions
 
     # Calculate RMSE by comparing predictions and actual values
+    sum_of_differences_squared = 0
     for index in range(i):
         for index2 in range(len(test_clusters[index])):
             current_cluster = test_clusters[index]
             actual = current_cluster[index2][-1]
+            #print "actual %s:" %actual
             predicted = cluster_predictions[index][index2]
-            difference = actual - predicted
+            #print "predicted %s:" %predicted
+            sum_of_differences_squared += pow(actual - predicted, 2)
+    rmse = math.sqrt(sum_of_differences_squared/len(test_set))
+    print "->RMSE %f" % rmse
+
+print "WCSS sums for all K: %s"%global_wcss
+
+
 
 
 
