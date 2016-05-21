@@ -10,9 +10,12 @@ def k_means(training_set, k):
     wcss = [None]*len(training_set)         # euclidean distances between data & centroids
 
     # Initially randomly select K observations as centroids
+
     for i in range(k):
         index_selected = np.random.randint(0, len(training_set))
         centroids[i]=training_set[index_selected]
+
+    print "centroids are :%s" %centroids
 
     # Recalculate centroids and re-assign clusters until convergence.
     changed = True
@@ -25,21 +28,21 @@ def k_means(training_set, k):
             min_index = sys.maxint
 
             for j in range(k):
-                curr_dist = euclidean_distance(training_set[i], centroids[j])
+                #curr_dist = euclidean_distance(training_set[i], centroids[j])
+                curr_dist = np.linalg.norm(np.array(training_set[i])-np.array(centroids[j]))
                 if curr_dist < min_dist:
                     min_dist = curr_dist
                     min_index = j
 
-            wcss[min_index] = min_dist
+            wcss[i] = min_dist
             if training_set[i] not in clusters[min_index]:
                 clusters[min_index].append(training_set[i])
                 changed = True
 
-
-
         # If observations changed clusters, then recalculate the centroids.
         if changed is True:
             centroids = recalculate_centroids(clusters, centroids)
+            print "centroids are :%s" %centroids
 
     name = 'k_%d_means' %k
     k_means_info = collections.namedtuple(name, ['centroids', 'clusters', 'wcss'])
@@ -59,7 +62,7 @@ def recalculate_centroids(clusters, centroids):
     # For each cluster, sum up the values of each feature. Then, take the average
     # of each each feature's sum. This will be the new centroid for the cluster.
     for i in range(len(clusters)):
-        feature_averages = [0] * len(clusters[i])
+        feature_averages = [0.0] * len(clusters[i][0])
 
         for observation in clusters[i]:
             for j in range(len(observation)):

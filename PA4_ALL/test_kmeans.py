@@ -20,8 +20,8 @@ features = np.array([[1.9, 2.3],
                      [0.3, 1.5],
                      [1.0, 1.0]])
 normalized = whiten(features)
-numpy_result = kmeans(normalized, 2)
-
+book = np.array((normalized[0],normalized[2]))
+numpy_result = kmeans(normalized, book)
 our_result = KMeans.k_means(normalized.tolist(), 2)
 print numpy_result
 print our_result
