@@ -5,107 +5,191 @@ import csv
 import KMeans
 import sys
 import math
+import collections
 from scipy.cluster.vq import vq, kmeans, whiten
-
-'''Initialization'''
-rand.seed(777)
-
-'''Adjust abalone.csv'''
-abalone_file = open('datasets/abalone.csv')
-reader = csv.reader(abalone_file)
-
-# new format:[M, F, I, rest of stuff]
-with open('datasets/adjusted-abalone.csv', 'wb') as csvfile:
-    csv_writer = csv.writer(csvfile, delimiter=',')
-    for row in reader:
-        sex = row[0]
-        new_row = list()
-
-        new_row.append(1.0 if sex == 'M' else 0.0)
-        new_row.append(1.0 if sex == 'F' else 0.0)
-        new_row.append(1.0 if sex == 'I' else 0.0)
-
-        for i in range(1, len(row)):
-            new_row.append(row[i])
-
-        csv_writer.writerow(new_row)
-abalone_file.close()
-print "Done adjusting abalone.csv ..."
-
-sampler = swr.SampleWithoutReplacement('datasets/adjusted-abalone.csv', .10)
-sampler.select()
-sampler.z_scale()
-
-training_set = sampler.get_training_set()
-test_set = sampler.get_test_set()
-
-global_wcss = list()
+import matplotlib.pyplot as plt
 
 
-#blah = kmeans(np.array(training_set)[:, :-1], 1)
+def adjust_abalone_dataset():
+    """
+    Rewrite the abalone dataset so that it does not contain non-numeric datapoints
 
-for i in [1, 2, 4, 8, 16]:
-    print "For K=%d:" %i
-    results = KMeans.k_means(training_set, i)
-    # print "->WCSS: %s" % results.wcss
-    global_wcss.append(sum(results.wcss))
-    print "->Centroids:"
-    for j in range(len(results.centroids)):
-        print "\t->Centroid %d:\n\t%s" %(j, results.centroids[j])
+    :return: N/A
+    """
+    '''Adjust abalone.csv'''
+    abalone_file = open('datasets/abalone.csv')
+    reader = csv.reader(abalone_file)
 
-    # Calculate Mean & SD
-    cluster_mean = None
-    cluster_SD = None
+    # new format:[M, F, I, rest of stuff]
+    with open('datasets/adjusted-abalone.csv', 'wb') as csvfile:
+        csv_writer = csv.writer(csvfile, delimiter=',')
+        for row in reader:
+            sex = row[0]
+            new_row = list()
 
-    weights_for_each_cluster = [None]*i
-    for j in range(len(results.clusters)):
-        print "Cluster %d :" % j
-        arr = np.array(results.clusters[j])
-        cluster_mean = np.mean(arr[:, :-1], axis=0)
-        cluster_SD = np.std(arr[:, :-1], axis=0)
-        weights = np.linalg.lstsq(arr[:, :-1], arr[:, -1])[0]
-        weights_for_each_cluster[j] = weights
+            new_row.append(1.0 if sex == 'M' else 0.0)
+            new_row.append(1.0 if sex == 'F' else 0.0)
+            new_row.append(1.0 if sex == 'I' else 0.0)
 
-        for k in range(len(cluster_mean)):
-            print "\t->Feature %d mean = %f, SD = %f" % (k, cluster_mean[k], cluster_SD[k])
+            for i in range(1, len(row)):
+                new_row.append(row[i])
 
-    # Cluster the test set
-    test_clusters = [[] for a in range(i)]
-    for j in range(len(test_set)):
+            csv_writer.writerow(new_row)
+    abalone_file.close()
+    # print "Done adjusting abalone.csv ..."
+
+
+def calculate_cluster_values(cluster):
+    """
+    Calculates the mean, SD, and weights of the given cluster.
+
+    :param cluster: The clusters that test set observations have been assigned to. Has format
+                    [list of [clusters of[observations of n features]]]
+    :return: A tuple which contains the mean and SD of each feature in the cluster. It also
+            contains the dimensional weights of x in Ax=b. Has format
+                    Tuple(mean, sd, weights)
+    """
+    arr = np.array(cluster)
+    cluster_mean = np.mean(arr[:, :-1], axis=0)
+    cluster_SD = np.std(arr[:, :-1], axis=0)
+    weights = np.linalg.lstsq(arr[:, :-1], arr[:, -1])[0]
+
+    cluster_info = collections.namedtuple("clusterInfo", ['mean', 'sd', 'weights'])
+    return cluster_info(cluster_mean, cluster_SD, weights)
+
+
+def assign_to_cluster(input_set, centroids):
+    """
+    Assigns every observation in the input_set to a cluster. Clusters are centered around the
+    given centroids
+
+    :param input_set: List of observations from the test set to put into a cluster. Has format
+                    [list of [observations]]
+    :param centroids: List of centroids from running K-means on a training set. Has format
+                    [list of centroids]
+    :return: The clusters that test set observations have been assigned to. Has format
+                    [list of [clusters of[observations of n features]]]
+    """
+    if len(centroids) < 1:
+        raise Exception('No centroids were given.')
+    if len(input_set) < 1:
+        raise Exception('No input observations were given.')
+
+    cluster_set = [[] for a in range(len(centroids))]
+
+    for i in range(len(input_set)):
         min_dist = sys.maxint
         min_index = sys.maxint
 
-        for k in range(len(results.centroids)):
-            curr_dist = KMeans.euclidean_distance(test_set[j], results.centroids[k])
+        for j in range(len(centroids)):
+            curr_dist = KMeans.euclidean_distance(input_set[i], centroids[j])
             if curr_dist < min_dist:
                 min_dist = curr_dist
-                min_index = k
-        if test_set[j] not in test_clusters[min_index]:
-            test_clusters[min_index].append(test_set[j])
+                min_index = j
+        if input_set[i] not in cluster_set[min_index]:
+            cluster_set[min_index].append(input_set[i])
 
-    # Now predict y for the test clusters using the weights from training clusters
-    cluster_predictions = [[] for a in range(i)]
-    for index in range(i):
-        current_weight = weights_for_each_cluster[index]
-        for observation in test_clusters[index]:
+    return cluster_set
+
+
+def predict_categories(clusters, weights):
+    """
+    Predicts the categories of each observation in the clusters using the weights given.
+
+    :param clusters: K clusters of observations with format
+                    [list of [clusters of [observations of n features]]]
+    :param weights: Dimensional weights from solving x for Ax=b with least squares. Has format of
+                    [list of [clusters of weights]] from solving x for Ax=b with least squares
+    :return: A list of predicted categories for each observation in the clusters. Has format of
+                    [list of [clusters of predicted categories]]
+    """
+    predictions = [[] for a in range(len(clusters))]
+    for index in range(len(clusters)):
+        current_weight = weights[index]
+        for observation in clusters[index]:
             predicted_y = np.array(observation)[:-1].dot(np.array(current_weight))
-            cluster_predictions[index].append(predicted_y)
-    #print cluster_predictions
+            predictions[index].append(predicted_y)
+    return predictions
 
-    # Calculate RMSE by comparing predictions and actual values
+
+def find_RMSE(input_set, clusters, predictions):
+    """
+    Calculates the RMSE by looking at the difference between the actual category (given by clusters)
+    and the predicted category (given by predictions).
+
+    :param input_set: List of observations from the test set
+                    [list of [observations of n features]]
+    :param clusters: K clusters of observations with format
+                    [list of [clusters of [observations of n features]]]
+    :param predictions: A list of predicted categories for each observation in the clusters. Has format of
+                    [list of [clusters of predicted categories]]
+    :return: float value representing the RMSE
+    """
     sum_of_differences_squared = 0
-    for index in range(i):
-        for index2 in range(len(test_clusters[index])):
-            current_cluster = test_clusters[index]
-            actual = current_cluster[index2][-1]
-            #print "actual %s:" %actual
-            predicted = cluster_predictions[index][index2]
-            #print "predicted %s:" %predicted
-            sum_of_differences_squared += pow(actual - predicted, 2)
-    rmse = math.sqrt(sum_of_differences_squared/len(test_set))
-    print "->RMSE %f" % rmse
+    for cluster in range(len(clusters)):
+        current_cluster = clusters[cluster]
+        for observation in range(len(test_clusters[cluster])):
+            actual_category = current_cluster[observation][-1]
+            predicted_category = predictions[cluster][observation]
+            sum_of_differences_squared += pow(actual_category - predicted_category, 2)
+    return math.sqrt(sum_of_differences_squared / len(input_set))
 
-print "WCSS sums for all K: %s"%global_wcss
+
+if __name__ == "__main__":
+    # Initialization
+    rand.seed(777)
+    adjust_abalone_dataset()
+
+    # Random sample the dataset and then scale it.
+    sampler = swr.SampleWithoutReplacement('datasets/adjusted-abalone.csv', .10)
+    sampler.z_scale()
+    training_set = sampler.get_training_set()
+    test_set = sampler.get_test_set()
+
+    global_wcss = list()
+    global_rmse = list()
+
+    # Run K-means on the data set and output results from it
+    for i in [1, 2, 4, 8, 16]:
+
+        # Run K-means on the training set and store the data
+        results = KMeans.k_means(training_set, i)
+        global_wcss.append(sum(results.wcss))
+
+        # Calculate the mean, sd, and weights of all clusters
+        cluster_weights = [None]*i
+        cluster_info = list()
+        for j in range(len(results.clusters)):
+            info = calculate_cluster_values(results.clusters[j])
+            cluster_info.append(info)
+            cluster_weights[j]=list(info.weights)
+
+        # assign all observations in the test set to clusters
+        test_clusters = assign_to_cluster(test_set, results.centroids)
+
+        # Now predict y for the test clusters using the weights from training clusters
+        cluster_predictions = predict_categories(test_clusters, cluster_weights)
+
+        # Calculate RMSE by comparing predictions and actual values
+        rmse = find_RMSE(test_set, test_clusters, cluster_predictions)
+
+        global_rmse.append(rmse)
+
+        # Write results to the console.
+        print "For K=%d:" % i
+        print "->Centroids:"
+        for j in range(len(results.centroids)):
+            print "\tCentroid %d:\n\t%s\n" % (j, results.centroids[j])
+        for j in range(len(cluster_info)):
+            print "\tCluster %d :" % j
+            current_info = cluster_info[j]
+            for k in range(len(current_info.mean)):
+                print"\t\t Feature %d: mean:%f  sd:%f" % (k, current_info.mean[k], current_info.sd[k])
+    print "WCSS sums for all K: %s" % global_wcss
+    print "RMSE for all K: %s" % global_rmse
+
+    # TODO: Graph WCSS vs. K and graph RMSE vs. K. Their values can be found in global_wcs and global_rmse
+
 
 
 

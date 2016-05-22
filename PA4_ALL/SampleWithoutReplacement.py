@@ -10,11 +10,11 @@ class SampleWithoutReplacement:
 
     def __init__(self, filename, sample_percent):
         self.exemplar_provider = ep.ExemplarProvider(filename)
-
         self.total = self.get_file_size()
         self.Nr_original = self.total
         self.Nn_original = round(sample_percent * self.Nr_original)
         self.counts = [0] * self.total
+        self.select()
 
     def select(self):
         Nn = self.Nn_original
@@ -39,6 +39,9 @@ class SampleWithoutReplacement:
     def z_scale(self):
         self.exemplar_provider.z_scale()
 
+    """
+    Setters and getters
+    """
     def get_counts(self):
         return self.counts
 

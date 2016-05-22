@@ -34,11 +34,6 @@ def k_means(training_set, k):
             min_index = sys.maxint
 
             for j in range(k):
-                #curr_dist = euclidean_distance(training_set[i], centroids[j])
-                #print np.array(training_set)[i]
-                #print np.array(centroids[j])
-                #print "\n"
-                # curr_dist = np.linalg.norm(np.array(training_set[i])-np.array(centroids[j]))
                 curr_dist = euclidean_distance(training_set[i], centroids[j])
                 if curr_dist < min_dist:
                     min_dist = curr_dist
