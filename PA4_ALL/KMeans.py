@@ -19,7 +19,7 @@ def k_means(training_set, k):
 
     for i in range(k):
         index_selected = np.random.randint(0, len(training_set))
-        centroids[i]=training_set[index_selected]
+        centroids[i] = training_set[index_selected]
 
     # print "centroids are :%s" %centroids
 
@@ -40,6 +40,8 @@ def k_means(training_set, k):
                     min_index = j
 
             wcss[i] = min_dist
+            # TODO: "not in" np.array changes output
+            # if training_set[i] not in np.array(clusters[min_index]):
             if training_set[i] not in clusters[min_index]:
                 clusters[min_index].append(training_set[i])
                 changed = True

@@ -29,7 +29,7 @@ class ExemplarProvider:
 
     'Normalize entire data set except for the last column'
     def z_scale(self):
-        for i in range(len(self.test_set[0])- ERROR_COLUMN):
+        for i in range(len(self.test_set[0]) - ERROR_COLUMN):
             self.z_scale_column(i)
 
     'Normalize a column'

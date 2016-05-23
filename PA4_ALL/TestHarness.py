@@ -86,7 +86,9 @@ def assign_to_cluster(input_set, centroids):
             if curr_dist < min_dist:
                 min_dist = curr_dist
                 min_index = j
+        # TODO: not in np.array changes output
         if input_set[i] not in cluster_set[min_index]:
+        # if input_set[i] not in np.array(cluster_set[min_index]):
             cluster_set[min_index].append(input_set[i])
 
     return cluster_set
@@ -135,6 +137,18 @@ def find_RMSE(input_set, clusters, predictions):
     return math.sqrt(sum_of_differences_squared / len(input_set))
 
 
+# TODO:
+def clean_columns(clusters):
+    for cluster in clusters:
+        for i in range(len(cluster[0])):
+        # for i in range(cluster.shape[1]):
+            if np.allclose(np.array(cluster)[:, i], np.zeros(len(cluster))):
+                # TODO: actually delete column from the input object reference
+                cluster = np.delete(np.array(cluster), i, axis=1).tolist()
+
+    return clusters
+
+
 if __name__ == "__main__":
     # Initialization
     rand.seed(777)
@@ -146,6 +160,10 @@ if __name__ == "__main__":
     training_set = sampler.get_training_set()
     test_set = sampler.get_test_set()
 
+    # reintroduce bias column to correct RMSE values
+    training_set = np.insert(training_set, -1, 1, axis=1).tolist()
+    test_set = np.insert(test_set, -1, 1, axis=1).tolist()
+
     global_wcss = list()
     global_rmse = list()
 
@@ -155,6 +173,7 @@ if __name__ == "__main__":
         # Run K-means on the training set and store the data
         results = KMeans.k_means(training_set, i)
         global_wcss.append(sum(results.wcss))
+        # clean_columns(results.clusters)
 
         # Calculate the mean, sd, and weights of all clusters
         cluster_weights = [None]*i
@@ -166,12 +185,14 @@ if __name__ == "__main__":
 
         # assign all observations in the test set to clusters
         test_clusters = assign_to_cluster(test_set, results.centroids)
+        # test_clusters = clean_columns(test_clusters)
 
         # Now predict y for the test clusters using the weights from training clusters
         cluster_predictions = predict_categories(test_clusters, cluster_weights)
 
         # Calculate RMSE by comparing predictions and actual values
         rmse = find_RMSE(test_set, test_clusters, cluster_predictions)
+        print "RMSE for k=%d: %f" % (i, rmse)
 
         global_rmse.append(rmse)
 
@@ -181,24 +202,35 @@ if __name__ == "__main__":
         for j in range(len(results.centroids)):
             print "\tCentroid %d:\n\t%s\n" % (j, results.centroids[j])
         for j in range(len(cluster_info)):
-            print "\tCluster %d :" % j
+            print "\tCluster %d:" % j
             current_info = cluster_info[j]
             for k in range(len(current_info.mean)):
-                print"\t\t Feature %d: mean:%f  sd:%f" % (k, current_info.mean[k], current_info.sd[k])
+                print"\t\t Feature %d: mean: %f  sd: %f" % (k, current_info.mean[k], current_info.sd[k])
     print "WCSS sums for all K: %s" % global_wcss
     print "RMSE for all K: %s" % global_rmse
+    # print "Sum of all RMSE's: %f" % sum(global_rmse)
 
-    # TODO: Graph WCSS vs. K and graph RMSE vs. K. Their values can be found in global_wcs and global_rmse
+    # Graph WCSS vs K and graph RMSE vs K.
+    # Their values can be found in global_wcs and global_rmse
+    from matplotlib.backends.backend_pdf import PdfPages
+    pp = PdfPages('plots.pdf')
 
+    plt.plot([1, 2, 4, 8, 16], global_rmse)
+    plt.xlabel("k")
+    plt.ylabel("RMSE")
+    plt.title("RMSE vs K")
+    plt.savefig(pp, format='pdf')
 
+    # clear first plot
+    plt.cla()
+    plt.clf()
+    plt.close()
 
+    plt.plot([1, 2, 4, 8, 16], global_wcss)
+    plt.xlabel("k")
+    plt.ylabel("WCSS")
+    plt.title("WCSS vs K")
+    plt.savefig(pp, format='pdf')
 
-
-
-
-
-
-
-
-
+    pp.close()
 
