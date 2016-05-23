@@ -7,6 +7,7 @@ import SampleWithoutReplacement as swr
 
 RAND_NUM = 777
 
+
 class TestHouseholder(TestCase):
     def setUp(self):
         # TODO: try using different example

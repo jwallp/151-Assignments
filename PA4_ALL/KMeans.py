@@ -31,7 +31,52 @@ def k_means(training_set, k):
     while changed:
         changed = False
         clusters = [[] for i in range(k)]
-        print clusters
+        clusters_indices = [[] for i in range(k)]
+
+        # Assign observations to the minimum distance centroid
+        for i in range(len(training_set)):
+            min_dist = sys.maxint
+            min_index = sys.maxint
+
+            for j in range(k):
+                curr_dist = euclidean_distance(training_set[i], centroids[j])
+                if curr_dist < min_dist:
+                    min_dist = curr_dist
+                    min_index = j
+
+            wcss[i] = min_dist
+            clusters[min_index].append(training_set[i])
+            clusters_indices[min_index].append(i)
+
+        # If observations changed clusters, then recalculate the centroids.
+        new_centroids = recalculate_centroids(clusters, centroids)
+        for centroid in new_centroids:
+            if centroid not in centroids:
+                changed = True
+        centroids = new_centroids
+
+    name = 'k_%d_means' %k
+    k_means_info = collections.namedtuple(name, ['centroids', 'clusters', 'indices', 'wcss'])
+    return k_means_info(centroids, clusters, clusters_indices, wcss)
+
+
+def k_means2(training_set, k, start_centroids):
+    """
+    :param training_set: list of observations
+    :param k: number of clusters to create
+    :return: tuple of centroids, clusters, WCSS
+    """
+
+    clusters = [[] for i in range(k)]               # cluster[i] refers to data points around centroid[i]
+    clusters_indices = [[] for i in range(k)]
+    centroids = start_centroids                    # central points for clusters
+    wcss = [None]*len(training_set)         # euclidean distances between data & centroids
+
+    # Recalculate centroids and re-assign clusters until convergence.
+    changed = True
+    while changed:
+        changed = False
+        clusters = [[] for i in range(k)]
         clusters_indices = [[] for i in range(k)]
 
         # Assign observations to the minimum distance centroid

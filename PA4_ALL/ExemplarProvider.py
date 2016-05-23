@@ -29,7 +29,7 @@ class ExemplarProvider:
 
     'Normalize entire data set except for the last column'
     def z_scale(self):
-        for i in range(len(self.test_set[0])):
+        for i in range(len(self.test_set[0])-ERROR_COLUMN):
             self.z_scale_column(i)
 
     'Normalize a column'
@@ -40,9 +40,10 @@ class ExemplarProvider:
         'Slides tell us to use the mean and SD from ONLY the training set'
         'so we will omit this part'
         """
+        """
         for subList in self.test_set:
             items.append(subList[column])
-
+        """
         for subList in self.training_set:
             items.append(subList[column])
 

@@ -8,6 +8,7 @@ import math
 import collections
 import Householder as hh
 from scipy.cluster.vq import vq, kmeans, whiten
+from sklearn.preprocessing import scale
 import matplotlib.pyplot as plt
 
 
@@ -17,7 +18,6 @@ def adjust_abalone_dataset():
 
     :return: N/A
     """
-    '''Adjust abalone.csv'''
     abalone_file = open('datasets/abalone.csv')
     reader = csv.reader(abalone_file)
 
@@ -88,6 +88,7 @@ def assign_to_cluster(input_set, centroids):
         raise Exception('No input observations were given.')
 
     cluster_set = [[] for a in range(len(centroids))]
+    cluster_indices = [[] for a in range(len(centroids))]
 
     for i in range(len(input_set)):
         min_dist = sys.maxint
@@ -100,11 +101,13 @@ def assign_to_cluster(input_set, centroids):
                 min_index = j
         if input_set[i] not in cluster_set[min_index]:
             cluster_set[min_index].append(input_set[i])
+            cluster_indices[min_index].append(i)
 
-    return cluster_set
+    assignment = collections.namedtuple("clusterAssigment", ['clusters', 'indices'])
+    return assignment(cluster_set, cluster_indices)
 
 
-def predict_categories(clusters, weights):
+def predict_categories(clusters, weights, unscaled_test_set):
     """
     Predicts the categories of each observation in the clusters using the weights given.
 
@@ -115,16 +118,16 @@ def predict_categories(clusters, weights):
     :return: A list of predicted categories for each observation in the clusters. Has format of
                     [list of [clusters of predicted categories]]
     """
-    predictions = [[] for a in range(len(clusters))]
-    for index in range(len(clusters)):
+    predictions = [[] for a in range(len(clusters.indices))]
+    for index in range(len(clusters.indices)):
         current_weight = weights[index]
-        for observation in clusters[index]:
-            predicted_y = np.array(observation)[:-1].dot(np.array(current_weight))
+        for observation_index in clusters.indices[index]:
+            predicted_y = np.array(unscaled_test_set[observation_index])[:-1].dot(np.array(current_weight))
             predictions[index].append(predicted_y)
     return predictions
 
 
-def find_RMSE(input_set, clusters, predictions):
+def find_RMSE(unscaled_set, clusters, predictions):
     """
     Calculates the RMSE by looking at the difference between the actual category (given by clusters)
     and the predicted category (given by predictions).
@@ -138,15 +141,13 @@ def find_RMSE(input_set, clusters, predictions):
     :return: float value representing the RMSE
     """
     sum_of_differences_squared = 0
-    for cluster in range(len(clusters)):
-        current_cluster = clusters[cluster]
-        for observation in range(len(test_clusters[cluster])):
-            actual_category = current_cluster[observation][-1]
-            predicted_category = predictions[cluster][observation]
-            #print "ACTUAL_CATEGORY: %f" %actual_category
-            #print "PREDICTED %f" %predicted_category
+    for cluster in range(len(clusters.indices)):
+        current_cluster_indices = clusters.indices[cluster]
+        for j in range(len(current_cluster_indices)):
+            actual_category = unscaled_set[current_cluster_indices[j]][-1]
+            predicted_category = predictions[cluster][j]
             sum_of_differences_squared += pow(actual_category - predicted_category, 2)
-    return math.sqrt(sum_of_differences_squared / len(input_set))
+    return math.sqrt(sum_of_differences_squared / len(unscaled_set))
 
 
 if __name__ == "__main__":
@@ -170,7 +171,7 @@ if __name__ == "__main__":
     global_rmse = list()
 
     # Run K-means on the data set and output results from it
-    for i in [2]:
+    for i in [1, 2, 4, 8, 16]:
 
         # Run K-means on the training set and store the data
         results = KMeans.k_means(training_set, i)
@@ -185,10 +186,10 @@ if __name__ == "__main__":
             cluster_weights[j]=list(info.weights)
 
         # assign all observations in the test set to clusters
-        test_clusters = assign_to_cluster(unscaled_test_set, results.centroids)
+        test_clusters = assign_to_cluster(test_set, results.centroids)
 
         # Now predict y for the test clusters using the weights from training clusters
-        cluster_predictions = predict_categories(test_clusters, cluster_weights)
+        cluster_predictions = predict_categories(test_clusters, cluster_weights, unscaled_test_set)
 
         # Calculate RMSE by comparing predictions and actual values
         rmse = find_RMSE(unscaled_test_set, test_clusters, cluster_predictions)
@@ -209,16 +210,3 @@ if __name__ == "__main__":
     print "RMSE for all K: %s" % global_rmse
 
     # TODO: Graph WCSS vs. K and graph RMSE vs. K. Their values can be found in global_wcs and global_rmse
-
-
-
-
-
-
-
-
-
-
-
-
-
