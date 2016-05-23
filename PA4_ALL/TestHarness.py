@@ -87,7 +87,7 @@ def assign_to_cluster(input_set, centroids):
     if len(input_set) < 1:
         raise Exception('No input observations were given.')
 
-    cluster_set = [[] for a in range(len(centroids))]
+    # cluster_set = [[] for a in range(len(centroids))]
     cluster_indices = [[] for a in range(len(centroids))]
 
     for i in range(len(input_set)):
@@ -99,15 +99,16 @@ def assign_to_cluster(input_set, centroids):
             if curr_dist < min_dist:
                 min_dist = curr_dist
                 min_index = j
-        if input_set[i] not in cluster_set[min_index]:
-            cluster_set[min_index].append(input_set[i])
-            cluster_indices[min_index].append(i)
+        # if input_set[i] not in cluster_set[min_index]:
+            # cluster_set[min_index].append(input_set[i])
+        cluster_indices[min_index].append(i)
 
-    assignment = collections.namedtuple("clusterAssigment", ['clusters', 'indices'])
-    return assignment(cluster_set, cluster_indices)
+    # assignment = collections.namedtuple("clusterAssigment", ['clusters', 'indices'])
+    # return assignment(cluster_set, cluster_indices)
+    return cluster_indices
 
 
-def predict_categories(clusters, weights, unscaled_test_set):
+def predict_categories(unscaled_test_set, clusters_of_indices, weights):
     """
     Predicts the categories of each observation in the clusters using the weights given.
 
@@ -118,16 +119,23 @@ def predict_categories(clusters, weights, unscaled_test_set):
     :return: A list of predicted categories for each observation in the clusters. Has format of
                     [list of [clusters of predicted categories]]
     """
-    predictions = [[] for a in range(len(clusters.indices))]
-    for index in range(len(clusters.indices)):
-        current_weight = weights[index]
-        for observation_index in clusters.indices[index]:
-            predicted_y = np.array(unscaled_test_set[observation_index])[:-1].dot(np.array(current_weight))
-            predictions[index].append(predicted_y)
+    # predictions = [[] for a in range(len(clusters.indices))]
+    # for index in range(len(clusters.indices)):
+    #     current_weight = weights[index]
+    #     for observation_index in clusters.indices[index]:
+    #         predicted_y = np.array(unscaled_test_set[observation_index])[:-1].dot(np.array(current_weight))
+    #         predictions[index].append(predicted_y)
+    # return predictions
+    predictions = [[] for a in range(len(clusters_of_indices))]
+    for cluster in range(len(clusters_of_indices)):
+        current_weights = weights[cluster]
+        for observation_index in clusters_of_indices[cluster]:
+            predicted_y = np.array(unscaled_test_set[observation_index])[:-1].dot(np.array(current_weights))
+            predictions[cluster].append(predicted_y)
     return predictions
 
 
-def find_RMSE(unscaled_set, clusters, predictions):
+def find_RMSE(unscaled_set, clusters_of_indices, predictions):
     """
     Calculates the RMSE by looking at the difference between the actual category (given by clusters)
     and the predicted category (given by predictions).
@@ -140,12 +148,23 @@ def find_RMSE(unscaled_set, clusters, predictions):
                     [list of [clusters of predicted categories]]
     :return: float value representing the RMSE
     """
+    # sum_of_differences_squared = 0
+    # for cluster in range(len(clusters.indices)):
+    #     current_cluster_indices = clusters.indices[cluster]
+    #     for j in range(len(current_cluster_indices)):
+    #         actual_category = unscaled_set[current_cluster_indices[j]][-1]
+    #         predicted_category = predictions[cluster][j]
+    #         sum_of_differences_squared += pow(actual_category - predicted_category, 2)
+    # return math.sqrt(sum_of_differences_squared / len(unscaled_set))
+
     sum_of_differences_squared = 0
-    for cluster in range(len(clusters.indices)):
-        current_cluster_indices = clusters.indices[cluster]
-        for j in range(len(current_cluster_indices)):
-            actual_category = unscaled_set[current_cluster_indices[j]][-1]
-            predicted_category = predictions[cluster][j]
+    for cluster in range(len(clusters_of_indices)):
+        current_cluster_indices = clusters_of_indices[cluster]
+
+        for index in range(len(current_cluster_indices)):
+            observation_index = current_cluster_indices[index]
+            actual_category = unscaled_set[observation_index][-1]
+            predicted_category = predictions[cluster][index]
             sum_of_differences_squared += pow(actual_category - predicted_category, 2)
     return math.sqrt(sum_of_differences_squared / len(unscaled_set))
 
@@ -189,7 +208,7 @@ if __name__ == "__main__":
         test_clusters = assign_to_cluster(test_set, results.centroids)
 
         # Now predict y for the test clusters using the weights from training clusters
-        cluster_predictions = predict_categories(test_clusters, cluster_weights, unscaled_test_set)
+        cluster_predictions = predict_categories(unscaled_test_set, test_clusters, cluster_weights)
 
         # Calculate RMSE by comparing predictions and actual values
         rmse = find_RMSE(unscaled_test_set, test_clusters, cluster_predictions)
