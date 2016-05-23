@@ -8,20 +8,13 @@ import logging
 
 np.set_printoptions(threshold='nan')
 
-RAND_NUM = 777
+rand.seed(777)
+sampler = swr.SampleWithoutReplacement('datasets/adjusted-abalone.csv', .10)
+arr = np.array(sampler.get_training_set())
+print np.linalg.lstsq(arr[:, :-1], arr[:, -1])[0]
 
-features = np.array([[1.9, 2.3],
-                     [1.5, 2.5],
-                     [0.8, 0.6],
-                     [0.4, 1.8],
-                     [0.1, 0.1],
-                     [0.2, 1.8],
-                     [2.0, 0.5],
-                     [0.3, 1.5],
-                     [1.0, 1.0]])
-normalized = whiten(features)
-book = np.array((normalized[0],normalized[2]))
-numpy_result = kmeans(normalized, book)
-our_result = KMeans.k_means(normalized.tolist(), 2)
-print numpy_result
-print our_result
+rand.seed(777)
+sampler2 = swr.SampleWithoutReplacement('datasets/adjusted-abalone.csv', .10)
+sampler2.z_scale()
+arr2 = np.array(sampler2.get_training_set())
+print np.linalg.lstsq(arr2[:, :-1], arr2[:, -1])[0]

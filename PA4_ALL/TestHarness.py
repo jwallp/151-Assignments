@@ -6,6 +6,7 @@ import KMeans
 import sys
 import math
 import collections
+import Householder as hh
 from scipy.cluster.vq import vq, kmeans, whiten
 import matplotlib.pyplot as plt
 
@@ -39,7 +40,7 @@ def adjust_abalone_dataset():
     # print "Done adjusting abalone.csv ..."
 
 
-def calculate_cluster_values(cluster):
+def calculate_cluster_values(results, j, unscaled_set):
     """
     Calculates the mean, SD, and weights of the given cluster.
 
@@ -49,10 +50,21 @@ def calculate_cluster_values(cluster):
             contains the dimensional weights of x in Ax=b. Has format
                     Tuple(mean, sd, weights)
     """
+
+    cluster = results.clusters[j]
     arr = np.array(cluster)
+
+    cluster_indices = results.indices[j]
+    weights_matrix = list()
+    for index in cluster_indices:
+        weights_matrix.append(unscaled_set[index])
+    weights_matrix = np.array(weights_matrix)
+
+    np.savetxt("test.csv", arr, delimiter=",")
+
     cluster_mean = np.mean(arr[:, :-1], axis=0)
     cluster_SD = np.std(arr[:, :-1], axis=0)
-    weights = np.linalg.lstsq(arr[:, :-1], arr[:, -1])[0]
+    weights = np.linalg.lstsq(weights_matrix[:, :-1], weights_matrix[:, -1])[0]
 
     cluster_info = collections.namedtuple("clusterInfo", ['mean', 'sd', 'weights'])
     return cluster_info(cluster_mean, cluster_SD, weights)
@@ -131,26 +143,34 @@ def find_RMSE(input_set, clusters, predictions):
         for observation in range(len(test_clusters[cluster])):
             actual_category = current_cluster[observation][-1]
             predicted_category = predictions[cluster][observation]
+            #print "ACTUAL_CATEGORY: %f" %actual_category
+            #print "PREDICTED %f" %predicted_category
             sum_of_differences_squared += pow(actual_category - predicted_category, 2)
     return math.sqrt(sum_of_differences_squared / len(input_set))
 
 
 if __name__ == "__main__":
     # Initialization
-    rand.seed(777)
     adjust_abalone_dataset()
 
     # Random sample the dataset and then scale it.
+    rand.seed(777)
     sampler = swr.SampleWithoutReplacement('datasets/adjusted-abalone.csv', .10)
     sampler.z_scale()
     training_set = sampler.get_training_set()
     test_set = sampler.get_test_set()
 
+    # Tried to see if it made a difference if QR was performed on unscaled datasets
+    rand.seed(777)
+    sampler2 = swr.SampleWithoutReplacement('datasets/adjusted-abalone.csv', .10)
+    unscaled_training_set = sampler2.get_training_set()
+    unscaled_test_set = sampler2.get_test_set()
+
     global_wcss = list()
     global_rmse = list()
 
     # Run K-means on the data set and output results from it
-    for i in [1, 2, 4, 8, 16]:
+    for i in [2]:
 
         # Run K-means on the training set and store the data
         results = KMeans.k_means(training_set, i)
@@ -160,18 +180,18 @@ if __name__ == "__main__":
         cluster_weights = [None]*i
         cluster_info = list()
         for j in range(len(results.clusters)):
-            info = calculate_cluster_values(results.clusters[j])
+            info = calculate_cluster_values(results, j, unscaled_training_set)
             cluster_info.append(info)
             cluster_weights[j]=list(info.weights)
 
         # assign all observations in the test set to clusters
-        test_clusters = assign_to_cluster(test_set, results.centroids)
+        test_clusters = assign_to_cluster(unscaled_test_set, results.centroids)
 
         # Now predict y for the test clusters using the weights from training clusters
         cluster_predictions = predict_categories(test_clusters, cluster_weights)
 
         # Calculate RMSE by comparing predictions and actual values
-        rmse = find_RMSE(test_set, test_clusters, cluster_predictions)
+        rmse = find_RMSE(unscaled_test_set, test_clusters, cluster_predictions)
 
         global_rmse.append(rmse)
 

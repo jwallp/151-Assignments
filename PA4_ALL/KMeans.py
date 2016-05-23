@@ -12,21 +12,27 @@ def k_means(training_set, k):
     """
 
     clusters = [[] for i in range(k)]       # cluster[i] refers to data points around centroid[i]
+    clusters_indices = [[] for i in range(k)]
     centroids = [None]*k                    # central points for clusters
     wcss = [None]*len(training_set)         # euclidean distances between data & centroids
 
     # Initially randomly select K observations as centroids
-
+    indices_selected = list()
     for i in range(k):
-        index_selected = np.random.randint(0, len(training_set))
-        centroids[i]=training_set[index_selected]
-
-    # print "centroids are :%s" %centroids
+        while True:
+            index_selected = np.random.randint(0, len(training_set))
+            if index_selected not in indices_selected:
+                centroids[i]=training_set[index_selected]
+                indices_selected.append(index_selected)
+                break
 
     # Recalculate centroids and re-assign clusters until convergence.
     changed = True
     while changed:
         changed = False
+        clusters = [[] for i in range(k)]
+        print clusters
+        clusters_indices = [[] for i in range(k)]
 
         # Assign observations to the minimum distance centroid
         for i in range(len(training_set)):
@@ -40,18 +46,19 @@ def k_means(training_set, k):
                     min_index = j
 
             wcss[i] = min_dist
-            if training_set[i] not in clusters[min_index]:
-                clusters[min_index].append(training_set[i])
-                changed = True
+            clusters[min_index].append(training_set[i])
+            clusters_indices[min_index].append(i)
 
         # If observations changed clusters, then recalculate the centroids.
-        if changed is True:
-            centroids = recalculate_centroids(clusters, centroids)
-            # print "centroids are :%s" %centroids
+        new_centroids = recalculate_centroids(clusters, centroids)
+        for centroid in new_centroids:
+            if centroid not in centroids:
+                changed = True
+        centroids = new_centroids
 
     name = 'k_%d_means' %k
-    k_means_info = collections.namedtuple(name, ['centroids', 'clusters', 'wcss'])
-    return k_means_info(centroids, clusters, wcss)
+    k_means_info = collections.namedtuple(name, ['centroids', 'clusters', 'indices', 'wcss'])
+    return k_means_info(centroids, clusters, clusters_indices, wcss)
 
 
 def euclidean_distance(observ1, observ2):
